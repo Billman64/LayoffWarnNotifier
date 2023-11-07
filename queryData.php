@@ -1,7 +1,5 @@
 <?php
 
-
-
 $filename = "allStates.json";
 $location = "data/";
 if(isset($_GET["state"])) {$state = statenameTransform($_GET["state"]);}
@@ -13,8 +11,10 @@ $date = getdate();
 
 echo "state = " . $state . "<br>";
 // echo "date = " . $date["month"] . "<br>"; echo "date = " . getdate()["year"] . "<br>";
-echo "strtotime() " . strtotime($date["month"]."/". $date["mday"]."/". $date["year"]) ."<br>";
-//echo "strtotime()2 " . strtotime("11/1/2023");
+//$a = $date["mon"]."/". $date["mday"]."/". $date["year"];
+//echo $a;
+//echo "strtotime() " . strtotime($date["mon"]."/". $date["mday"]."/". $date["year"]) ."<br>";
+//echo "strtotime()2 " . strtotime("11/7/2023");
 
 
 
@@ -52,7 +52,6 @@ if($data!=""){
 		
 	}
 	
-	
 	// create a WARN layoff notice object
 	
 	
@@ -63,11 +62,25 @@ if($data!=""){
 
 
 // check if given date is this month or later
-function isFutureDate($inputDate){
+function isFutureDate($inputDate){		
+	
+	//TODO: go back 2 months for the earlier 60-day notices that may be effective during the current month
+	
 	$cd = getdate();
+	if(isset($_GET["date"])) {	// TODO: validate input date
+		//$a =  strpos($_GET["date"],"/",0) //
+		//if(checkdate(substr($_GET["date"]),0,2), $a , substr($_GET["date"],-4,4)) $cd = $_GET["date"];
+		$cd = getdate(strtotime($_GET["date"]));
+	}
+	
+	
 	//TODO: fix bug with strtotime() comparison
-	echo strtotime($inputDate) ."|". strtotime($cd["month"]."/". $cd["mday"]."/". $cd["year"]) ." ";	// debug
-	return (strtotime($inputDate) >= strtotime($cd["month"]."/". $cd["mday"]."/". $cd["year"]));
+//	echo strtotime($inputDate) ."|". strtotime($cd["mon"]."/". $cd["mday"]."/". $cd["year"]) ." ";	// debug
+	//echo "input date: ". $inputDate ."||". $cd["mon"]."/". $cd["mday"]."/". $cd["year"] ."<br>";
+	if(strtotime($inputDate) >= strtotime($cd["mon"]."/". $cd["mday"]."/". $cd["year"])){
+	}
+	return strtotime($inputDate) >= strtotime($cd["mon"]."/1/". $cd["year"]);
+	
 }
 
 
