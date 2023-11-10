@@ -2,17 +2,27 @@
 
 $filename = "allStates.json";
 $location = "data/";
-if(isset($_GET["state"])) {$state = statenameTransform($_GET["state"]);
+if(isset($_GET["state"]) && strlen($_GET["state"]) > 0) {
+	$state = statenameTransform($_GET["state"]);
 	echo "WARN layoff notice data for " . statenameTransform($state) . "<br>";
 } else {
 	$state = "";	// TODO: shortcut if then else (ternary statement)  $condition ? $value_if_true : $value_if_false
-	echo "WARN layoff notice data. Select a state.";
+	echo "WARN layoff notice data.";
 	selectStateForm();
 }
+
+$company=" ";
+if(isset($_GET["company"]) && strlen($_GET["company"]) > 0) {
+	$company = $_GET["company"];	//TODO: refactor into a function (ie: "getCompany()")
+}
+
+
 
 // testing area
 $date = getdate();
 
+echo "company: " . $company; //." strlen(): ". strlen($company) ."<br>";
+//echo "strstr(): " . strstr("asdf","d") ."<br>";
 
 // echo "date = " . $date["month"] . "<br>"; echo "date = " . getdate()["year"] . "<br>";
 //$a = $date["mon"]."/". $date["mday"]."/". $date["year"];
@@ -41,14 +51,14 @@ if($data!=""){
 	
 	$dataHeader = $dataValues[0];
 	
-	echo count($dataValues);
+	//echo count($dataValues);
 	//echo $dataValues[49904][1];	// $dataValues[index][field] like a 2D array (but really it's nested)
 	
 	$i = 1;
 	echo "<br>";
-	foreach($dataValues as $d){
+	foreach($dataValues as $d){	//TODO: make filtering flexible for state-less searches
 		
-		if($d[0] == $state && isFutureDate($d[4])){
+		if($d[0] == $state && isFutureDate($d[4]) && strstr($d[1], $company) ){	//TODO: new fcn for looser string comparisons (trim, case, punctuation, etc.)
 		
 		echo $i .". ". $d[1] ." ". $d[4] ."<br>";
 		$i++;
@@ -107,11 +117,15 @@ function statenameTransform($state) {
 }
 
 
-function selectStateForm($color="#3df"){
+function selectStateForm(){
 	
-	echo '<div><span style="background: '. $color .'"><form style="margin:10px;">Select state:<br>';
+	echo '<form style="margin:10px;">Select state:<br>';
+	
+	echo ' <label for="company">company</label>';
+	echo '<input name="company" type="text"> ';
 	
 	// TODO: refactor, possibly using a shared hashmap in a loop
+	echo '<label for="state">state</label>';	//TODO: default selected state to state passed in GET if any
 	echo '<select name="state">
 	<option value="AL">Alabama</option>
 	<option value="AK">Alaska</option>
@@ -165,8 +179,10 @@ function selectStateForm($color="#3df"){
 	<option value="WI">Wisconsin</option>
 	<option value="WY">Wyoming</option>
 </select> ';
+
+
 echo '<button type="submit" style="height: 30px; width: 70;">submit</button>';
-echo '</form></span></div>';
+echo '</form>';
 	
 }
 
