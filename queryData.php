@@ -11,14 +11,14 @@ if(isset($_GET["state"]) && strlen($_GET["state"]) > 0) {
 	selectStateForm();
 }
 
-$company=" ";
-if(isset($_GET["company"]) && strlen($_GET["company"]) > 0) {
-	$company = $_GET["company"];	//TODO: refactor into a function (ie: "getCompany()")
-}
+$company = getCompany();
 
 
 
 // testing area
+
+echo '<span style="background:#ddd; font-family:courier;"><div style="background:inherit">Test area</div>';
+
 $date = getdate();
 
 echo "company: " . $company; //." strlen(): ". strlen($company) ."<br>";
@@ -29,6 +29,8 @@ echo "company: " . $company; //." strlen(): ". strlen($company) ."<br>";
 //echo $a;
 //echo "strtotime() " . strtotime($date["mon"]."/". $date["mday"]."/". $date["year"]) ."<br>";
 //echo "strtotime()2 " . strtotime("11/7/2023");
+
+echo '</span>';
 
 
 
@@ -56,7 +58,7 @@ if($data!=""){
 	
 	$i = 1;
 	echo "<br>";
-	foreach($dataValues as $d){	//TODO: make filtering flexible for state-less searches
+	foreach($dataValues as $d){	//TODO: make filtering flexible for state-less searchesmmm
 		
 		if($d[0] == $state && isFutureDate($d[4]) && strstr($d[1], $company) ){	//TODO: new fcn for looser string comparisons (trim, case, punctuation, etc.)
 		
@@ -126,6 +128,7 @@ function selectStateForm(){
 	
 	// TODO: refactor, possibly using a shared hashmap in a loop
 	echo '<label for="state">state</label>';	//TODO: default selected state to state passed in GET if any
+	//TODO: all 50-state option (with a given company name)
 	echo '<select name="state">
 	<option value="AL">Alabama</option>
 	<option value="AK">Alaska</option>
@@ -184,6 +187,16 @@ function selectStateForm(){
 echo '<button type="submit" style="height: 30px; width: 70;">submit</button>';
 echo '</form>';
 	
+}
+
+
+function getCompany() {
+	$company=" ";
+	if(isset($_GET["company"]) && strlen($_GET["company"]) > 0) {
+		$company = $_GET["company"];	//TODO: refactor into a function (ie: "getCompany()")
+	}
+	return $company;
+
 }
 
 ?>
