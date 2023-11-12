@@ -13,6 +13,8 @@ if(isset($_GET["state"]) && strlen($_GET["state"]) > 0) {
 
 $company = getCompany();
 
+//$stateHashMap = createStateHashMap();
+
 
 
 // testing area
@@ -121,10 +123,7 @@ function statenameTransform($state) {
 
 function selectStateForm(){
 	
-	echo '<form style="margin:10px;">Select state:<br>';
-	
-	echo ' <label for="company">company</label>';
-	echo '<input name="company" type="text"> ';
+	echo '<form style="margin:10px;">Search WARN layoff notices<br>';
 	
 	// TODO: refactor, possibly using a shared hashmap in a loop
 	echo '<label for="state">state</label>';	//TODO: default selected state to state passed in GET if any
@@ -183,6 +182,9 @@ function selectStateForm(){
 	<option value="WI">Wisconsin</option>
 	<option value="WY">Wyoming</option>
 </select> ';
+
+	echo ' <label for="company">company</label>';
+	echo '<input name="company" type="text"> ';
 
 
 echo '<button type="submit" style="height: 30px; width: 70;">submit</button>';
