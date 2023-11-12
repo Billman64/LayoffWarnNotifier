@@ -130,6 +130,7 @@ function selectStateForm(){
 	echo '<label for="state">state</label>';	//TODO: default selected state to state passed in GET if any
 	//TODO: all 50-state option (with a given company name)
 	echo '<select name="state">
+	<option value=""> -- select state --</option>
 	<option value="AL">Alabama</option>
 	<option value="AK">Alaska</option>
 	<option value="AZ">Arizona</option>
