@@ -39,7 +39,7 @@ echo '</span>';
 
 // Check if data file is there
 
-if(file_exists($location . $filename)) {
+if(file_exists($location . $filename)) {	//TODO: refactor - integrate into next if() block
 	$data = file_get_contents($location . $filename);
 } else {
 	$data = "";
@@ -60,11 +60,22 @@ if($data!=""){
 	
 	$i = 1;
 	echo "<br>";
-	foreach($dataValues as $d){	//TODO: make filtering flexible for state-less searchesmmm
+	
+	
+		//TODO: table vs. divs and spans
+		//TODO: tabular header
+	foreach($dataValues as $d){	//TODO: make filtering flexible for state-less searches
 		
 		if($d[0] == $state && isFutureDate($d[4]) && strstr($d[1], $company) ){	//TODO: new fcn for looser string comparisons (trim, case, punctuation, etc.)
 		
-		echo $i .". ". $d[1] ." ". $d[4] ."<br>";
+
+		//DONE: handling for records without an effective date (ie: Utah)
+		$effDate = "";
+		if(array_key_exists(5, $d)) { $effDate = $d[5]; }	// array_key_exists() could work as well
+			else $effDate = "";
+		
+		
+		echo $i .". ". $d[1] ." ". $d[4] ." ". $effDate . "<br>";
 		$i++;
 		}
 		
@@ -115,6 +126,7 @@ function statenameTransform($state) {
 		case "al": $longform = "Alabama"; break;
 		case "nj": $longform = "New Jersey"; break;
 		case "oh": $longform = "Ohio"; break;
+		case "ut": $longform = "Utah"; break;
 		default: $longform = $state;
 	}
 	return $longform;
@@ -201,5 +213,7 @@ function getCompany() {
 	return $company;
 
 }
+
+//TODO: write automated testing. Selenium?
 
 ?>
