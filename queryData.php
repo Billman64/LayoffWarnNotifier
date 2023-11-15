@@ -2,13 +2,17 @@
 
 $filename = "allStates.json";
 $location = "data/";
+// 50-state array imported and modified from: https://dzone.com/articles/usa-states-list-php-array
+$allStates = array('AL'=>"Alabama", 'AK'=>"Alaska", 'AZ'=>"Arizona", 'AR'=>"Arkansas", 'CA'=>"California", 'CO'=>"Colorado", 'CT'=>"Connecticut", 'DE'=>"Delaware", 'DC'=>"District Of Columbia", 'FL'=>"Florida", 'GA'=>"Georgia", 'HI'=>"Hawaii", 'ID'=>"Idaho", 'IL'=>"Illinois", 'IN'=>"Indiana", 'IA'=>"Iowa", 'KS'=>"Kansas", 'KY'=>"Kentucky", 'LA'=>"Louisiana", 'ME'=>"Maine", 'MD'=>"Maryland", 'MA'=>"Massachusetts", 'MI'=>"Michigan", 'MN'=>"Minnesota", 'MS'=>"Mississippi", 'MO'=>"Missouri", 'MT'=>"Montana", 'NE'=>"Nebraska", 'NV'=>"Nevada", 'NH'=>"New Hampshire", 'NJ'=>"New Jersey", 'NM'=>"New Mexico", 'NY'=>"New York", 'NC'=>"North Carolina", 'ND'=>"North Dakota", 'OH'=>"Ohio", 'OK'=>"Oklahoma", 'OR'=>"Oregon", 'PA'=>"Pennsylvania", 'RI'=>"Rhode Island", 'SC'=>"South Carolina", 'SD'=>"South Dakota", 'TN'=>"Tennessee", 'TX'=>"Texas", 'UT'=>"Utah", 'VT'=>"Vermont", 'VA'=>"Virginia", 'WA'=>"Washington", 'WV'=>"West Virginia", 'WI'=>"Wisconsin", 'WY'=>"Wyoming");
+//TODO: refactor into function - createStatesArray()
+
 if(isset($_GET["state"]) && strlen($_GET["state"]) > 0) {
 	$state = statenameTransform($_GET["state"]);
-	echo "WARN layoff notice data for " . statenameTransform($state) . "<br>";
+	echo "WARN layoff notice data for " . getState($state) . "<br>";
 } else {
 	$state = "";	// TODO: shortcut if then else (ternary statement)  $condition ? $value_if_true : $value_if_false
 	echo "WARN layoff notice data.";
-	selectStateForm();
+	selectStateForm($allStates);
 }
 
 $company = getCompany();
@@ -32,6 +36,8 @@ echo "company: " . $company; //." strlen(): ". strlen($company) ."<br>";
 //echo "strtotime() " . strtotime($date["mon"]."/". $date["mday"]."/". $date["year"]) ."<br>";
 //echo "strtotime()2 " . strtotime("11/7/2023");
 
+echo "getState(): ". getState('')  ."<br>";
+
 echo '</span>';
 
 
@@ -45,6 +51,8 @@ if(file_exists($location . $filename)) {	//TODO: refactor - integrate into next 
 	$data = "";
 	echo "Data file does not exist.";
 }
+
+
 
 
 // Query data based on given inputs (state, month and year)
@@ -90,7 +98,7 @@ if($data!=""){
 
 if($state != "") {
 	echo "<br>";
-	selectStateForm();
+	selectStateForm($allStates, $state);
 }
 
 // check if given date is this month or later
@@ -133,14 +141,32 @@ function statenameTransform($state) {
 }
 
 
-function selectStateForm(){
+function selectStateForm($states, $currentState = ""){
 	
 	echo '<form style="margin:10px;">Search WARN layoff notices<br>';
 	
 	// TODO: refactor, possibly using a shared hashmap in a loop
 	echo '<label for="state">state</label>';	//TODO: default selected state to state passed in GET if any
-	//TODO: all 50-state option (with a given company name)
-	echo '<select name="state">
+	//TODO: all 50-state option, tied to a given company name
+
+	
+	echo '<select name="state">';
+	
+	$sel="";
+	foreach($states as $key => $value){
+		if($key == $currentState) {
+			$sel = 'selected="selected"';
+		} 
+			else {$sel = "";}
+			
+		echo '<option value="' . $key . '" ' . $sel .'>' . $value . '</option>' ;
+	}
+	echo '</select>';
+	
+	
+	
+	
+	/* echo '<select name="state">
 	<option value=""> -- select state --</option>
 	<option value="AL">Alabama</option>
 	<option value="AK">Alaska</option>
@@ -193,7 +219,7 @@ function selectStateForm(){
 	<option value="WV">West Virginia</option>
 	<option value="WI">Wisconsin</option>
 	<option value="WY">Wyoming</option>
-</select> ';
+</select> '; */
 
 	echo ' <label for="company">company</label>';
 	echo '<input name="company" type="text"> ';
@@ -215,5 +241,30 @@ function getCompany() {
 }
 
 //TODO: write automated testing. Selenium?
+
+
+function getState($s){
+	
+	// Create associative array for all 50 states
+	
+	// checking by abbreviation
+	// 50-state array imported and modified from: https://dzone.com/articles/usa-states-list-php-array
+	$states = array('AL'=>"Alabama", 'AK'=>"Alaska", 'AZ'=>"Arizona", 'AR'=>"Arkansas", 'CA'=>"California", 'CO'=>"Colorado", 'CT'=>"Connecticut", 'DE'=>"Delaware", 'DC'=>"District Of Columbia", 'FL'=>"Florida", 'GA'=>"Georgia", 'HI'=>"Hawaii", 'ID'=>"Idaho", 'IL'=>"Illinois", 'IN'=>"Indiana", 'IA'=>"Iowa", 'KS'=>"Kansas", 'KY'=>"Kentucky", 'LA'=>"Louisiana", 'ME'=>"Maine", 'MD'=>"Maryland", 'MA'=>"Massachusetts", 'MI'=>"Michigan", 'MN'=>"Minnesota", 'MS'=>"Mississippi", 'MO'=>"Missouri", 'MT'=>"Montana", 'NE'=>"Nebraska", 'NV'=>"Nevada", 'NH'=>"New Hampshire", 'NJ'=>"New Jersey", 'NM'=>"New Mexico", 'NY'=>"New York", 'NC'=>"North Carolina", 'ND'=>"North Dakota", 'OH'=>"Ohio", 'OK'=>"Oklahoma", 'OR'=>"Oregon", 'PA'=>"Pennsylvania", 'RI'=>"Rhode Island", 'SC'=>"South Carolina", 'SD'=>"South Dakota", 'TN'=>"Tennessee", 'TX'=>"Texas", 'UT'=>"Utah", 'VT'=>"Vermont", 'VA'=>"Virginia", 'WA'=>"Washington", 'WV'=>"West Virginia", 'WI'=>"Wisconsin", 'WY'=>"Wyoming");
+	
+	if(array_key_exists(strtoupper($s), $states)) return $states[strtoupper($s)];
+	
+	
+	// longform-to-abbreviation
+	// 50-state array code imported and modified from a comment in: https://gist.github.com/maxrice/2776900
+	$states = array('alabama'=>'AL','alaska'=>'AK','arizona'=>'AZ','arkansas'=>'AR','california'=>'CA','colorado'=>'CO','connecticut'=>'CT','delaware'=>'DE','dist of columbia'=>'DC','dist. of columbia'=>'DC','district of columbia'=>'DC','florida'=>'FL','georgia'=>'GA','guam'=>'GU','hawaii'=>'HI','idaho'=>'ID','illinois'=>'IL','indiana'=>'IN','iowa'=>'IA','kansas'=>'KS','kentucky'=>'KY','louisiana'=>'LA','maine'=>'ME','maryland'=>'MD','massachusetts'=>'MA','michigan'=>'MI','minnesota'=>'MN','mississippi'=>'MS','missouri'=>'MO','montana'=>'MT','nebraska'=>'NE','nevada'=>'NV','new hampshire'=>'NH','new jersey'=>'NJ','new mexico'=>'NM','new york'=>'NY','north carolina'=>'NC','north dakota'=>'ND','ohio'=>'OH','oklahoma'=>'OK','oregon'=>'OR','pennsylvania'=>'PA','puerto rico'=>'PR','rhode island'=>'RI','south carolina'=>'SC','south dakota'=>'SD','tennessee'=>'TN','texas'=>'TX','utah'=>'UT','vermont'=>'VT','virgin islands'=>'VI','virginia'=>'VA','washington'=>'WA','washington d.c.'=>'DC','washington dc'=>'DC','west virginia'=>'WV','wisconsin'=>'WI','wyoming'=>'WY','armed forces africa'=>'AF','armed forces americas'=>'AA','armed forces canada'=>'AC','armed forces europe'=>'AE','armed forces middle east'=>'AM','armed forces pacific'=>'AP','alberta'=>'AB','british columbia'=>'BC','manitoba'=>'MB','new brunswick'=>'NB','newfoundland & labrador'=>'NL','northwest territories'=>'NT','nova scotia'=>'NS','nunavut'=>'NU','ontario'=>'ON','prince edward island'=>'PE','quebec'=>'QC','saskatchewan'=>'SK','yukon territory'=>'YT');
+	
+	if(array_key_exists(strtolower($s), $states)) {		
+		return $states[strtolower($s)];
+	}
+	return "";
+}
+
+
+
 
 ?>
