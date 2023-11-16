@@ -36,7 +36,7 @@ echo "company: " . $company; //." strlen(): ". strlen($company) ."<br>";
 //echo "strtotime() " . strtotime($date["mon"]."/". $date["mday"]."/". $date["year"]) ."<br>";
 //echo "strtotime()2 " . strtotime("11/7/2023");
 
-echo "getState(): ". getState('')  ."<br>";
+echo "getState(): ". $state  ."<br>";
 
 echo '</span>';
 
@@ -47,6 +47,13 @@ echo '</span>';
 
 if(file_exists($location . $filename)) {	//TODO: refactor - integrate into next if() block
 	$data = file_get_contents($location . $filename);
+	
+	if($data == "") {	// Error-trapping for a blank data file.
+		$data = "Date file is empty.";
+		echo $data . "<br>";	
+		error_log($data . "\n");
+		$data = "";
+	}
 } else {
 	$data = "";
 	echo "Data file does not exist.";
