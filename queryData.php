@@ -7,7 +7,7 @@ $allStates = array('AL'=>"Alabama", 'AK'=>"Alaska", 'AZ'=>"Arizona", 'AR'=>"Arka
 //TODO: refactor into function - createStatesArray()
 
 if(isset($_GET["state"]) && strlen($_GET["state"]) > 0) {
-	$state = statenameTransform($_GET["state"]);
+	$state = $_GET["state"];
 	echo "WARN layoff notice data for " . getState($state) . "<br>";
 } else {
 	$state = "";	// TODO: shortcut if then else (ternary statement)  $condition ? $value_if_true : $value_if_false
@@ -137,6 +137,9 @@ function isFutureDate($inputDate){
 function statenameTransform($state) {
 	$longform = "";
 	
+	
+	
+	
 	switch(strtolower($state)){		// TODO: consider a hashmap
 		case "al": $longform = "Alabama"; break;
 		case "nj": $longform = "New Jersey"; break;
@@ -150,6 +153,9 @@ function statenameTransform($state) {
 
 function selectStateForm($states, $currentState = ""){
 	
+	
+
+	
 	echo '<form style="margin:10px;">Search WARN layoff notices<br>';
 	
 	// TODO: refactor, possibly using a shared hashmap in a loop
@@ -161,7 +167,10 @@ function selectStateForm($states, $currentState = ""){
 	
 	$sel="";
 	foreach($states as $key => $value){
-		if($key == $currentState) {
+		
+		error_log("key: " . $key . " currentState: " . $currentState);
+		
+		if(strtoupper($key) == strtoupper($currentState)) {
 			$sel = 'selected="selected"';
 		} 
 			else {$sel = "";}
