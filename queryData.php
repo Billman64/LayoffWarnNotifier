@@ -1,5 +1,7 @@
 <?php
 
+$testArea=true;
+
 $filename = "allStates.json";
 $location = "data/";
 // 50-state array imported and modified from: https://dzone.com/articles/usa-states-list-php-array
@@ -22,23 +24,35 @@ $company = getCompany();
 
 
 // testing area
+if($testArea){
 
-echo '<span style="background:#ddd; font-family:courier;"><div style="background:inherit">Test area</div>';
+	echo '<span style="background:#ddd; font-family:courier;"><div style="background:inherit">Test area</div>';
 
-$date = getdate();
+	$date = getdate();
 
-echo "company: " . $company; //." strlen(): ". strlen($company) ."<br>";
-//echo "strstr(): " . strstr("asdf","d") ."<br>";
+	echo "company: " . $company; //." strlen(): ". strlen($company) ."<br>";
+	//echo "strstr(): " . strstr("asdf","d") ."<br>";
 
-// echo "date = " . $date["month"] . "<br>"; echo "date = " . getdate()["year"] . "<br>";
-//$a = $date["mon"]."/". $date["mday"]."/". $date["year"];
-//echo $a;
-//echo "strtotime() " . strtotime($date["mon"]."/". $date["mday"]."/". $date["year"]) ."<br>";
-//echo "strtotime()2 " . strtotime("11/7/2023");
+	// echo "date = " . $date["month"] . "<br>"; echo "date = " . getdate()["year"] . "<br>";
+	//$a = $date["mon"]."/". $date["mday"]."/". $date["year"];
+	//echo $a;
+	//echo "strtotime() " . strtotime($date["mon"]."/". $date["mday"]."/". $date["year"]) ."<br>";
+	//echo "strtotime()2 " . strtotime("11/7/2023");
 
-echo "getState(): ". $state  ."<br>";
+	echo "getState(): ". $state  ."<br>";
+	
+	$testDate = "102023";
+	echo "isFutureDate($testDate): " . isFutureDate($testDate) . "<br>";
+	
+	echo "getDate()[]: " . getdate()["mday"] . "<br>";
+	echo "unicode 002f (#47): &#47;<br>";
+	echo "get[date]: " . $_GET["date"] ."<br>";
+	echo "getdate(strtotime()): " . getdate(strtotime($_GET["date"]));
 
-echo '</span>';
+
+
+	echo '</span>';
+}
 
 
 
@@ -73,15 +87,18 @@ if($data!=""){
 	//echo count($dataValues);
 	//echo $dataValues[49904][1];	// $dataValues[index][field] like a 2D array (but really it's nested)
 	
-	$i = 1;
+	$i = 0;
 	echo "<br>";
 	
 	
 		//TODO: table vs. divs and spans
 		//TODO: tabular header
+		//TODO: aggregate data point(s): # of records
+		
 	foreach($dataValues as $d){	//TODO: make filtering flexible for state-less searches
 		
-		if($d[0] == $state && isFutureDate($d[4]) && strstr($d[1], $company) ){	//TODO: new fcn for looser string comparisons (trim, case, punctuation, etc.)
+		//if($d[0] == getState($state) && isFutureDate($d[4]) && strstr($d[1], $company) ){	//TODO: new fcn for looser string comparisons (trim, case, punctuation, etc.)
+		if($d[0] == getState($state) && isFutureDate($d[4]) && strstr($d[1], $company) ){	//TODO: new fcn for looser string comparisons (trim, case, punctuation, etc.)
 		
 
 		//DONE: handling for records without an effective date (ie: Utah)
@@ -90,11 +107,12 @@ if($data!=""){
 			else $effDate = "";
 		
 		
-		echo $i .". ". $d[1] ." ". $d[4] ." ". $effDate . "<br>";
+		echo $i .". ". $d[1] ." ". $d[4] ." ". $effDate . "<br>";	// Data output
 		$i++;
 		}
 		
 	}
+	echo "# of records: " . $i ."<br>";
 	
 	// create a WARN layoff notice object
 	
@@ -113,31 +131,51 @@ function isFutureDate($inputDate){
 	
 	//TODO: go back 2 months for the earlier 60-day notices that may be effective during the current month
 	
-	$cd = getdate();
+	$cd = getdate();	// default date
 	if(isset($_GET["date"])) {	// TODO: validate input date
 		//$a =  strpos($_GET["date"],"/",0) //
 		//if(checkdate(substr($_GET["date"]),0,2), $a , substr($_GET["date"],-4,4)) $cd = $_GET["date"];
+		
 		$cd = getdate(strtotime($_GET["date"]));
+	
+	} else {
+
+		
+		//$cd = getdate(strtotime("2023113")); // works!
+		
+		//$cd = getdate(strtotime(date('m/d/Y')));
+		//echo "---- defaulted cd: " . $cd["mon"]."/1/". $cd["year"] ." vs. input date: ". $inputDate ."<br>";
+		/*echo " - defaulted cd: " . strtotime($cd["mon"]."/1/". $cd["year"]) ." vs. input date: ". strtotime($inputDate) ."<br>";
+		echo " cd mon: " . strtotime($cd["mon"]."/01/". $cd["year"]) ."<br>";
+		*/
 	}
+	
+	
+
+	//echo "-->cd: " . $cd["mon"]."/01/". $cd["year"] ."<br>";
 	
 	
 	//TODO: fix bug with strtotime() comparison
 //	echo strtotime($inputDate) ."|". strtotime($cd["mon"]."/". $cd["mday"]."/". $cd["year"]) ." ";	// debug
 	//echo "input date: ". $inputDate ."||". $cd["mon"]."/". $cd["mday"]."/". $cd["year"] ."<br>";
-	if(strtotime($inputDate) >= strtotime($cd["mon"]."/". $cd["mday"]."/". $cd["year"])){
-	}
+	
+	
+	/*
+	if(strtotime($inputDate) >= strtotime($cd["mon"]."/1/". $cd["year"])){
+		//echo "-future date found! input: ".  $inputDate ." vs. cd:". $cd["mon"]. "/1/". $cd["year"] ."<br>";
+		
+	}*/
+	
 	return strtotime($inputDate) >= strtotime($cd["mon"]."/1/". $cd["year"]);
 	
 }
 
 
 
-
+// deprecated?
 // Compare state abbreviation to longform spelling 	// TODO: implement state transform function
 function statenameTransform($state) {
 	$longform = "";
-	
-	
 	
 	
 	switch(strtolower($state)){		// TODO: consider a hashmap
@@ -155,7 +193,6 @@ function selectStateForm($states, $currentState = ""){
 	
 	
 
-	
 	echo '<form style="margin:10px;">Search WARN layoff notices<br>';
 	
 	// TODO: refactor, possibly using a shared hashmap in a loop
@@ -180,63 +217,6 @@ function selectStateForm($states, $currentState = ""){
 	echo '</select>';
 	
 	
-	
-	
-	/* echo '<select name="state">
-	<option value=""> -- select state --</option>
-	<option value="AL">Alabama</option>
-	<option value="AK">Alaska</option>
-	<option value="AZ">Arizona</option>
-	<option value="AR">Arkansas</option>
-	<option value="CA">California</option>
-	<option value="CO">Colorado</option>
-	<option value="CT">Connecticut</option>
-	<option value="DE">Delaware</option>
-	<option value="DC">District Of Columbia</option>
-	<option value="FL">Florida</option>
-	<option value="GA">Georgia</option>
-	<option value="HI">Hawaii</option>
-	<option value="ID">Idaho</option>
-	<option value="IL">Illinois</option>
-	<option value="IN">Indiana</option>
-	<option value="IA">Iowa</option>
-	<option value="KS">Kansas</option>
-	<option value="KY">Kentucky</option>
-	<option value="LA">Louisiana</option>
-	<option value="ME">Maine</option>
-	<option value="MD">Maryland</option>
-	<option value="MA">Massachusetts</option>
-	<option value="MI">Michigan</option>
-	<option value="MN">Minnesota</option>
-	<option value="MS">Mississippi</option>
-	<option value="MO">Missouri</option>
-	<option value="MT">Montana</option>
-	<option value="NE">Nebraska</option>
-	<option value="NV">Nevada</option>
-	<option value="NH">New Hampshire</option>
-	<option value="NJ">New Jersey</option>
-	<option value="NM">New Mexico</option>
-	<option value="NY">New York</option>
-	<option value="NC">North Carolina</option>
-	<option value="ND">North Dakota</option>
-	<option value="OH">Ohio</option>
-	<option value="OK">Oklahoma</option>
-	<option value="OR">Oregon</option>
-	<option value="PA">Pennsylvania</option>
-	<option value="RI">Rhode Island</option>
-	<option value="SC">South Carolina</option>
-	<option value="SD">South Dakota</option>
-	<option value="TN">Tennessee</option>
-	<option value="TX">Texas</option>
-	<option value="UT">Utah</option>
-	<option value="VT">Vermont</option>
-	<option value="VA">Virginia</option>
-	<option value="WA">Washington</option>
-	<option value="WV">West Virginia</option>
-	<option value="WI">Wisconsin</option>
-	<option value="WY">Wyoming</option>
-</select> '; */
-
 	echo ' <label for="company">company</label>';
 	echo '<input name="company" type="text"> ';
 
