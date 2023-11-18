@@ -101,7 +101,7 @@ if($data!=""){
 	foreach($dataValues as $d){	//TODO: make filtering flexible for state-less searches
 		
 		//if($d[0] == getState($state) && isFutureDate($d[4]) && strstr($d[1], $company) ){	//TODO: new fcn for looser string comparisons (trim, case, punctuation, etc.)
-		if($d[0] == getState($state) && isFutureDate($d[4]) && strstr($d[1], $company) ){	//TODO: new fcn for looser string comparisons (trim, case, punctuation, etc.)
+		if(($d[0] == getState($state) || getState($state) == "") && isFutureDate($d[4]) && strstr($d[1], $company) ){	//TODO: new fcn for looser string comparisons (trim, case, punctuation, etc.)
 		
 
 		//DONE: handling for records without an effective date (ie: Utah)
@@ -205,10 +205,13 @@ function selectStateForm($states, $currentState = ""){
 	
 	echo '<select name="state">';
 	
+	//TODO: any state (or 'no state selected')option
+	echo '<option value=""> -- no state selected --</option>' ;
+			
 	$sel="";
 	foreach($states as $key => $value){
 		
-		error_log("key: " . $key . " currentState: " . $currentState);
+		// error_log("key: " . $key . " currentState: " . $currentState);
 		
 		if(strtoupper($key) == strtoupper($currentState)) {
 			$sel = 'selected="selected"';
