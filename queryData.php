@@ -1,6 +1,6 @@
 <?php
 
-$testArea=true;
+$testArea=false;
 
 $filename = "allStates.json";
 $location = "data/";
@@ -94,6 +94,9 @@ if($data!=""){
 		//TODO: table vs. divs and spans
 		//TODO: tabular header
 		//TODO: aggregate data point(s): # of records
+		
+	$d = $dataValues[0];	// Headers
+	echo ' '. $d[0] .' '. $d[1] .' '. $d[4] .' '. $d[5] .'<br>';
 		
 	foreach($dataValues as $d){	//TODO: make filtering flexible for state-less searches
 		
