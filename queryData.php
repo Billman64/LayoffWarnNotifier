@@ -198,6 +198,8 @@ function selectStateForm($states, $currentState = ""){
 
 	echo '<form style="margin:10px;">Search WARN layoff notices<br>';
 	
+	echo '<div>Use at least one criteria.</div><br>';
+	
 	// TODO: refactor, possibly using a shared hashmap in a loop
 	echo '<label for="state">state</label>';	//TODO: default selected state to state passed in GET if any
 	//TODO: all 50-state option, tied to a given company name
@@ -225,9 +227,13 @@ function selectStateForm($states, $currentState = ""){
 	
 	echo ' <label for="company">company</label>';
 	echo '<input name="company" type="text"> ';
+	
+	//TODO: date selection (? calendar picker, month and year dropdown boxes)
+	echo '<label for="date">Pick a month/year</label>';
+	echo '<input id="date" name="date" type="date">';
 
 
-echo '<button type="submit" style="height: 30px; width: 70;">submit</button>';
+echo '<button type="submit" style="height: 30px; width: 70px; margin-left: 40px;">submit</button>';
 echo '</form>';
 	
 }
