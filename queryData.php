@@ -90,13 +90,9 @@ if($data!=""){
 	$i = 0;
 	echo "<br>";
 	
-	
-		//TODO: table vs. divs and spans
-		//TODO: tabular header
-		//TODO: aggregate data point(s): # of records
 		
 	$d = $dataValues[0];	// Headers
-	echo ' '. $d[0] .' '. $d[1] .' '. $d[4] .' '. $d[5] .'<br>';
+	echo '<table><thead style="font-weight:bold;"><td></td><td>'. $d[1] .'</td><td>'. $d[4] .'</td><td>'. $d[5] .'</td></thead>';
 		
 	foreach($dataValues as $d){	//TODO: make filtering flexible for state-less searches
 		
@@ -110,11 +106,13 @@ if($data!=""){
 			else $effDate = "";
 		
 		
-		echo $i .". ". $d[1] ." ". $d[4] ." ". $effDate . "<br>";	// Data output
+		echo "<tr><td>" . $i .".</td><td>". $d[1] ."</td><td>". $d[4] ."</td><td>". $effDate . "</td></tr>";	// Data output
 		$i++;
 		}
 		
 	}
+	echo '</table>';
+	
 	echo "# of records: " . $i ."<br>";
 	
 	// create a WARN layoff notice object
@@ -229,7 +227,7 @@ function selectStateForm($states, $currentState = ""){
 	echo '<input name="company" type="text"> ';
 	
 	//TODO: date selection (? calendar picker, month and year dropdown boxes)
-	echo '<label for="date">Pick a month/year</label>';
+	echo '<label for="date">effective month:</label>';
 	echo '<input id="date" name="date" type="date">';
 
 
