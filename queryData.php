@@ -2,18 +2,26 @@
 
 $testArea=false;
 
+//TODO: Bootstrap for responsiveness
+
+
 $filename = "allStates.json";
 $location = "data/";
 // 50-state array imported and modified from: https://dzone.com/articles/usa-states-list-php-array
 $allStates = array('AL'=>"Alabama", 'AK'=>"Alaska", 'AZ'=>"Arizona", 'AR'=>"Arkansas", 'CA'=>"California", 'CO'=>"Colorado", 'CT'=>"Connecticut", 'DE'=>"Delaware", 'DC'=>"District Of Columbia", 'FL'=>"Florida", 'GA'=>"Georgia", 'HI'=>"Hawaii", 'ID'=>"Idaho", 'IL'=>"Illinois", 'IN'=>"Indiana", 'IA'=>"Iowa", 'KS'=>"Kansas", 'KY'=>"Kentucky", 'LA'=>"Louisiana", 'ME'=>"Maine", 'MD'=>"Maryland", 'MA'=>"Massachusetts", 'MI'=>"Michigan", 'MN'=>"Minnesota", 'MS'=>"Mississippi", 'MO'=>"Missouri", 'MT'=>"Montana", 'NE'=>"Nebraska", 'NV'=>"Nevada", 'NH'=>"New Hampshire", 'NJ'=>"New Jersey", 'NM'=>"New Mexico", 'NY'=>"New York", 'NC'=>"North Carolina", 'ND'=>"North Dakota", 'OH'=>"Ohio", 'OK'=>"Oklahoma", 'OR'=>"Oregon", 'PA'=>"Pennsylvania", 'RI'=>"Rhode Island", 'SC'=>"South Carolina", 'SD'=>"South Dakota", 'TN'=>"Tennessee", 'TX'=>"Texas", 'UT'=>"Utah", 'VT'=>"Vermont", 'VA'=>"Virginia", 'WA'=>"Washington", 'WV'=>"West Virginia", 'WI'=>"Wisconsin", 'WY'=>"Wyoming");
 //TODO: refactor into function - createStatesArray()
 
+echo '<div>WARN layoff notice search - ';
+echo getRandomSlogan();
+echo '</div>';
+
+
 if(isset($_GET["state"]) && strlen($_GET["state"]) > 0) {
 	$state = $_GET["state"];
 	echo "WARN layoff notice data for " . getState($state) . "<br>";
 } else {
 	$state = "";	// TODO: shortcut if then else (ternary statement)  $condition ? $value_if_true : $value_if_false
-	echo "WARN layoff notice data.";
+	//echo "WARN layoff notice data.";
 	selectStateForm($allStates);
 }
 
@@ -92,7 +100,7 @@ if($data!=""){
 	
 		
 	$d = $dataValues[0];	// Headers
-	echo '<table><thead style="font-weight:bold;"><td></td><td>'. $d[1] .'</td><td>'. $d[4] .'</td><td>'. $d[5] .'</td></thead>';
+	echo '<table><thead style="font-weight:bold;"><td></td><td>'. $d[1] .'</td><td>'. $d[4] .'</td><td>'. $d[5] . '</td><td>'. $d[6] .'</td></thead>';
 		
 	foreach($dataValues as $d){	//TODO: make filtering flexible for state-less searches
 		
@@ -105,8 +113,11 @@ if($data!=""){
 		if(array_key_exists(5, $d)) { $effDate = $d[5]; }	// array_key_exists() could work as well
 			else $effDate = "";
 		
+		if(array_key_exists(6, $d)) { $noticeType = $d[6]; }	// array_key_exists() could work as well
+			else $noticeType = "";
 		
-		echo "<tr><td>" . $i .".</td><td>". $d[1] ."</td><td>". $d[4] ."</td><td>". $effDate . "</td></tr>";	// Data output
+		
+		echo "<tr><td>" . $i .".</td><td>". $d[1] ."</td><td>". $d[4] ."</td><td>". $effDate . "</td><td>". $noticeType ."</td></tr>";	// Data output
 		$i++;
 		}
 		
@@ -117,9 +128,11 @@ if($data!=""){
 	
 	// create a WARN layoff notice object
 	
+	shareBar();	// share results via email, etc.
 	
+
+
 	
-		
 }
 
 if($state != "") {
@@ -231,7 +244,7 @@ function selectStateForm($states, $currentState = ""){
 	echo '<input id="date" name="date" type="date">';
 
 
-echo '<button type="submit" style="height: 30px; width: 70px; margin-left: 40px;">submit</button>';
+echo '<button type="submit" style="height: 30px; width: 70px; margin-left: 40px; border-radius: 8px;">submit</button>';
 echo '</form>';
 	
 }
@@ -270,7 +283,24 @@ function getState($s){
 	return "";
 }
 
+function shareBar(){
+	// TODO: create sharing method - email
+	// TODO: create sharing method - social media (fb, x, LinkedIn???)
+	
+	
+	
+	
+	
+}
 
+function getRandomSlogan(){
+	$i = rand(0,2);
+	switch($i){
+		case 0: return "Get the 60-day layoff warning your corporate family won't give you."; break;
+		case 1: return "A career heads-up for modern times."; break;
+		default: return "Has your company posted a WARN notice lately? Let's find out!"; break;
+	}
 
+}
 
 ?>
