@@ -2,6 +2,8 @@
 
 $testArea=false;
 
+echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">';
+
 //TODO: Bootstrap for responsiveness
 
 
@@ -13,12 +15,15 @@ $allStates = array('AL'=>"Alabama", 'AK'=>"Alaska", 'AZ'=>"Arizona", 'AR'=>"Arka
 
 echo '<div>WARN layoff notice search - ';
 echo getRandomSlogan();
-echo '</div>';
+echo '</div><br><br>';
 
 
 if(isset($_GET["state"]) && strlen($_GET["state"]) > 0) {
 	$state = $_GET["state"];
 	echo "WARN layoff notice data for " . getState($state) . "<br>";
+	//TODO: display search or defaulted date.
+	
+	selectStateForm($allStates, $state);
 } else {
 	$state = "";	// TODO: shortcut if then else (ternary statement)  $condition ? $value_if_true : $value_if_false
 	//echo "WARN layoff notice data.";
@@ -95,18 +100,19 @@ if($data!=""){
 	//echo count($dataValues);
 	//echo $dataValues[49904][1];	// $dataValues[index][field] like a 2D array (but really it's nested)
 	
-	$i = 0;
+	$recNum = 0;
 	echo "<br>";
 	
 		
 	$d = $dataValues[0];	// Headers
-	echo '<table><thead style="font-weight:bold;"><td></td><td>'. $d[1] .'</td><td>'. $d[4] .'</td><td>'. $d[5] . '</td><td>'. $d[6] .'</td></thead>';
+	echo '<table><thead style="font-weight:bold;"><td></td><td>'. $d[1] .'</td><td>'. $d[2] .'</td><td>'  . $d[4] .'</td><td>'. $d[5] . '</td><td>'. $d[6] .'</td></thead>';
 		
 	foreach($dataValues as $d){	//TODO: make filtering flexible for state-less searches
 		
 		//if($d[0] == getState($state) && isFutureDate($d[4]) && strstr($d[1], $company) ){	//TODO: new fcn for looser string comparisons (trim, case, punctuation, etc.)
 		if(($d[0] == getState($state) || getState($state) == "") && isFutureDate($d[4]) && strstr($d[1], $company) ){	//TODO: new fcn for looser string comparisons (trim, case, punctuation, etc.)
 		
+		//TODO: long company names with smaller font-size
 
 		//DONE: handling for records without an effective date (ie: Utah)
 		$effDate = "";
@@ -117,18 +123,18 @@ if($data!=""){
 			else $noticeType = "";
 		
 		
-		echo "<tr><td>" . $i .".</td><td>". $d[1] ."</td><td>". $d[4] ."</td><td>". $effDate . "</td><td>". $noticeType ."</td></tr>";	// Data output
-		$i++;
+		echo "<tr><td>" . $recNum .".</td><td width=400>". $d[1] ."</td><td width=200>". $d[2] ."</td><td>".  $d[4] ."</td><td>". $effDate . "</td><td>". $noticeType ."</td></tr>";	// Data output
+		$recNum++;
 		}
 		
 	}
 	echo '</table>';
 	
-	echo "# of records: " . $i ."<br>";
+	echo "# of records: " . $recNum ."<br>";
 	
 	// create a WARN layoff notice object
 	
-	shareBar();	// share results via email, etc.
+
 	
 
 
@@ -137,9 +143,11 @@ if($data!=""){
 
 if($state != "") {
 	echo "<br>";
-	selectStateForm($allStates, $state);
+	if($recNum > 100) selectStateForm($allStates, $state);
 }
-
+shareBar();	// share results via email, etc.
+	
+	
 // check if given date is this month or later
 function isFutureDate($inputDate){		
 	
@@ -287,7 +295,7 @@ function shareBar(){
 	// TODO: create sharing method - email
 	// TODO: create sharing method - social media (fb, x, LinkedIn???)
 	
-	
+	echo 'Share: <a href="mailto:?subject=Get the 60-day WARN layoff notice your corporate family won\'t tell you&body=Wouldn\'t you like to know in advance if your company is laying people off soon? You can find out for free!" class="fa fa-envelope" style="color:black;"></a>';
 	
 	
 	
@@ -302,5 +310,7 @@ function getRandomSlogan(){
 	}
 
 }
+
+//TODO: implement "buy me a coffee"
 
 ?>
