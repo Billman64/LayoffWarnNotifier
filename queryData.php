@@ -107,6 +107,7 @@ if($data!=""){
 	$d = $dataValues[0];	// Headers
 	echo '<table><thead style="font-weight:bold;"><td></td><td>'. $d[1] .'</td><td>'. $d[2] .'</td><td>'  . $d[4] .'</td><td>'. $d[5] . '</td><td>'. $d[6] .'</td><td>'. $d[3] .'</td></thead>';
 		
+	define("na","n/a");
 	foreach($dataValues as $d){	//TODO: make filtering flexible for state-less searches
 
 		//if($d[0] == getState($state) && isFutureDate($d[4]) && strstr($d[1], $company) ){	//TODO: new fcn for looser string comparisons (trim, case, punctuation, etc.)
@@ -117,15 +118,22 @@ if($data!=""){
 
 		//DONE: handling for records without an effective date (ie: Utah)
 		$effDate = "";
-		if(array_key_exists(5, $d)) { $effDate = $d[5]; }	// array_key_exists() could work as well
-			else $effDate = "";
+		$details="";
+		if(array_key_exists(5, $d)) { $effDate = $d[5]; } else $effDate = na;
+		if(array_key_exists(6, $d)) { $noticeType = $d[6]; } else $noticeType = na;
+		if(array_key_exists(7, $d) && $d[7]!="") { $timePeriod = $d[7]; $details.=" period: ". $timePeriod;} else $timePeriod = na;
+		if(array_key_exists(8, $d) && $d[8]!="") { $union = $d[8]; $details.=" union: ". $union;}	else $union = na;
 		
-		if(array_key_exists(6, $d)) { $noticeType = $d[6]; }	// array_key_exists() could work as well
-			else $noticeType = "[n/a]";
+		if($details != "") {
+			$details = "<details>" . $details ."</details>";
+		}
+
+		
+			
 		
 		
-		echo "<tr><td>" . $recNum .".</td><td width=400>". $d[1] ."</td><td width=200>". $d[2] ."</td><td>".  $d[4] ."</td><td>". $effDate . "</td><td>". $noticeType ."</td><td>". $d[3] ."</td></tr>";	// Data output
-		//$recNum++;
+		echo "<tr><td>" . $recNum .".</td><td width=400>". $d[1] ."</td><td width=200>". $d[2] ."</td><td>".  $d[4] ."</td><td>". $effDate . "</td><td>". $noticeType ."</td><td>". $d[3] ."</td><td>". $details ."</td></tr>";	// Data output
+		//echo "<tr><td style='padding-left: 10px;' colspan=7><details>time period: ". $timePeriod ." union: ". $union ."</details></td></tr>";
 		}
 		
 	}
