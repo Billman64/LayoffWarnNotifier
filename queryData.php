@@ -105,13 +105,14 @@ if($data!=""){
 	
 		
 	$d = $dataValues[0];	// Headers
-	echo '<table><thead style="font-weight:bold;"><td></td><td>'. $d[1] .'</td><td>'. $d[2] .'</td><td>'  . $d[4] .'</td><td>'. $d[5] . '</td><td>'. $d[6] .'</td></thead>';
+	echo '<table><thead style="font-weight:bold;"><td></td><td>'. $d[1] .'</td><td>'. $d[2] .'</td><td>'  . $d[4] .'</td><td>'. $d[5] . '</td><td>'. $d[6] .'</td><td>'. $d[3] .'</td></thead>';
 		
 	foreach($dataValues as $d){	//TODO: make filtering flexible for state-less searches
-		
+
 		//if($d[0] == getState($state) && isFutureDate($d[4]) && strstr($d[1], $company) ){	//TODO: new fcn for looser string comparisons (trim, case, punctuation, etc.)
 		if(($d[0] == getState($state) || getState($state) == "") && isFutureDate($d[4]) && strstr($d[1], $company) ){	//TODO: new fcn for looser string comparisons (trim, case, punctuation, etc.)
 		
+		$recNum++;
 		//TODO: long company names with smaller font-size
 
 		//DONE: handling for records without an effective date (ie: Utah)
@@ -120,11 +121,11 @@ if($data!=""){
 			else $effDate = "";
 		
 		if(array_key_exists(6, $d)) { $noticeType = $d[6]; }	// array_key_exists() could work as well
-			else $noticeType = "";
+			else $noticeType = "[n/a]";
 		
 		
-		echo "<tr><td>" . $recNum .".</td><td width=400>". $d[1] ."</td><td width=200>". $d[2] ."</td><td>".  $d[4] ."</td><td>". $effDate . "</td><td>". $noticeType ."</td></tr>";	// Data output
-		$recNum++;
+		echo "<tr><td>" . $recNum .".</td><td width=400>". $d[1] ."</td><td width=200>". $d[2] ."</td><td>".  $d[4] ."</td><td>". $effDate . "</td><td>". $noticeType ."</td><td>". $d[3] ."</td></tr>";	// Data output
+		//$recNum++;
 		}
 		
 	}
