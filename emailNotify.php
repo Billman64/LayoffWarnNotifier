@@ -29,29 +29,13 @@ $location = "data/";
 $data = getFileContents($location . $filename);
 
 
-/*
-if($data!=""){
-	$dataJson = json_decode($data);
-	$dataValues = $dataJson->{'values'};
-	$dataHeader = $dataValues[0];
-	
-	$longestName="";
-	foreach($dataValues as $d){
-		if(strlen($d[1]) > strlen($longestName)) $longestName = $d[1];
-	}
-	
-	echo "longest company name: " . $longestName;
-	echo "<br>---";
-} */
  
 require("conn.php");
 
 try {
 	$conn = new PDO("mysql:host=$servername;dbname=$database" ,$username, $password);
 	//$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	echo "connection sucessful!<br>";
-	
-	
+	//echo "connection sucessful!<br>";
 } catch(PDOException $e) {
 	echo "connection failed: " . $e->getMessage() . "<br>";
 }
@@ -61,15 +45,28 @@ try {
 // loop through database table of email addresses
 $sql = "SELECT * FROM user";
 $stm = $conn->query($sql);
-$emailAdds = $stm->fetchAll(PDO::FETCH_ASSOC);
+$users = $stm->fetchAll(PDO::FETCH_ASSOC);
 
 //echo $emailAdds[0]['email'];
 
-foreach($emailAdds as $emailRec){
-	$email = $emailRec['email'];
+foreach($users as $user){
+	$id = $user['id'];
+	$email = $user['email'];
 	
-	echo $email . "<br>";
+	echo $id. " " . $email . "<br>";
 	
+	$companies = getInputCompanies($id);
+	
+	
+	//echo "company count: " .count($companies) ."<br>";
+	//if($companies != "") echo "---". $companies[0]['name'] ."<br>";
+	
+	if($companies != "") {
+		foreach($companies as $c){
+			echo "---". $c['name'] ."<br>";
+			
+		}
+	}
 	
 	
 	
@@ -80,6 +77,28 @@ foreach($emailAdds as $emailRec){
 
 
 $conn = null;
+
+
+function getInputCompanies($id){
+		
+	// return associative array of company names listed in user's company list
+	
+	include("conn.php");
+	try {
+		$conn = new PDO("mysql:host=$servername;dbname=$database" ,$username, $password);
+		//$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		//echo "connection sucessful!<br>";
+	} catch(PDOException $e) {
+		echo "connection failed: " . $e->getMessage() . "<br>";
+	}
+	
+	$sql = "SELECT name FROM user_company WHERE user_id=$id";
+	$stm = $conn->query($sql);
+	$companies = $stm->fetchAll(PDO::FETCH_ASSOC);
+	
+	if(count($companies)>0) {return $companies;}
+	else {return "";}
+}
 
 
 function getFileContents($filePath){
