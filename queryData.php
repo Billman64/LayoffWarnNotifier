@@ -105,7 +105,9 @@ if($data!=""){
 	
 		
 	$d = $dataValues[0];	// Headers
-	echo '<table><thead style="font-weight:bold;"><td></td><td>'. $d[1] .'</td><td>'. $d[2] .'</td><td>'  . $d[4] .'</td><td>'. $d[5] . '</td><td>'. $d[6] .'</td><td>'. $d[3] .'</td></thead>';
+	$stateHeader="";
+	if($state == "") $stateHeader = '<td>'. $d[0] .'</td>';
+	echo '<table><thead style="font-weight:bold;"><td></td><td>'. $d[1] .'</td><td>'. $d[2] .'</td>'. $stateHeader .'<td>'  . $d[4] .'</td><td>'. $d[5] . '</td><td>'. $d[6] .'</td><td>'. $d[3] .'</td></thead>';
 		
 	define("na","n/a");
 	foreach($dataValues as $d){	//TODO: make filtering flexible for state-less searches
@@ -132,14 +134,14 @@ if($data!=""){
 			
 		
 		
-		echo "<tr><td>" . $recNum .".</td><td width=400>". $d[1] ."</td><td width=200>". $d[2] ."</td><td>".  $d[4] ."</td><td>". $effDate . "</td><td>". $noticeType ."</td><td>". $d[3] ."</td><td>". $details ."</td></tr>";	// Data output
+		echo "<tr><td>" . $recNum .".</td><td maxwidth=400>". $d[1] ."</td><td maxwidth=200>". $d[2] ."</td><td>". getState($d[0]) ."</td><td>".  $d[4] ."</td><td>". $effDate . "</td><td>". $noticeType ."</td><td>". $d[3] ."</td><td>". $details ."</td></tr>";	// Data output
 		//echo "<tr><td style='padding-left: 10px;' colspan=7><details>time period: ". $timePeriod ." union: ". $union ."</details></td></tr>";
 		}
 		
 	}
-	echo '</table>';
+	echo '</table><br>';
 	
-	echo "# of records: " . $recNum ."<br>";
+	echo "# of records: " . $recNum ."<br><br>";
 	
 	// create a WARN layoff notice object
 	
@@ -203,21 +205,7 @@ function isFutureDate($inputDate){
 
 
 
-// deprecated?
-// Compare state abbreviation to longform spelling 	// TODO: implement state transform function
-function statenameTransform($state) {
-	$longform = "";
-	
-	
-	switch(strtolower($state)){		// TODO: consider a hashmap
-		case "al": $longform = "Alabama"; break;
-		case "nj": $longform = "New Jersey"; break;
-		case "oh": $longform = "Ohio"; break;
-		case "ut": $longform = "Utah"; break;
-		default: $longform = $state;
-	}
-	return $longform;
-}
+
 
 
 function selectStateForm($states, $currentState = ""){
