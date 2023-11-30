@@ -22,14 +22,25 @@ $location = "data/";
 // separate script for historical for first-time users that just signed up?
 
 
+// Users can subscribe, unsubscribe, or edit their company list (CRUD management)
 
 
-// Check if data file is there
+
+
+// Check if data file is there -//TODO: refactor into a function
 
 $data = getFileContents($location . $filename);
 
+// Parse data
+$dataJson = json_decode($data);
+$dataValues = $dataJson->{'values'};
+$dataHeader = $dataValues[0];
 
- 
+
+
+
+
+// Get users' company search preferences 
 require("conn.php");
 
 try {
@@ -65,6 +76,19 @@ foreach($users as $user){
 		foreach($companies as $c){
 			echo "---". $c['name'] ."<br>";
 			
+			$coName = $c['name'];
+			$emailBody="";
+			//TODO: search user's company(ies) for recent layoff notice data
+			foreach($dataValues as $d){
+				if((strstr($d[1], $coName) != false)) $emailBody = $d[1] . $d[2] ."\r\n<br>"; 
+				
+				
+				echo $emailBody;
+				
+				
+			}
+		
+			
 		}
 	}
 	
@@ -77,6 +101,8 @@ foreach($users as $user){
 
 
 $conn = null;
+
+
 
 
 function getInputCompanies($id){
