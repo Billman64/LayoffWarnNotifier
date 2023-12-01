@@ -90,7 +90,7 @@ if(file_exists($location . $filename)) {	//TODO: refactor - integrate into next 
 
 
 // Query data based on given inputs (state, month and year)
-if($data!=""){
+if($data!="" & ($state!="" || isset($_GET['company']) || isset($_GET['date']))){
 	$dataJson = json_decode($data);
 	
 	$dataValues = $dataJson->{'values'};
