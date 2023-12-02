@@ -211,6 +211,7 @@ function isFutureDate($inputDate){
 function selectStateForm($states, $currentState = ""){
 	
 	
+	
 
 	echo '<form style="margin:10px;">Search WARN layoff notices<br>';
 	
@@ -246,11 +247,19 @@ function selectStateForm($states, $currentState = ""){
 	
 	//TODO: date selection (? calendar picker, month and year dropdown boxes)
 	echo '<label for="date" style="margin-left:10px; margin-right:10px;">month notice received: <i class="fa fa-info-circle" title="tip: go back 2 months prior, since notices are posted with a 60-day window."></i></label>';
-	echo '<input id="date" name="date" type="date">';
+	
+
+	echo '<input id="date" name="date" type="date" value="$defaultDate">';
 
 
 echo '<button type="submit" style="height: 30px; width: 70px; margin-left: 40px; border-radius: 8px;">submit</button>';
 echo '</form>';
+
+
+
+//TODO: set default date - 2 months back
+$defaultDate = "2023-10-01";
+echo "<script>document.getElementById('date').value='$defaultDate' </script>";
 	
 }
 
