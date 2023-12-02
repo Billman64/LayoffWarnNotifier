@@ -13,7 +13,9 @@
 $sheetId = "1s2FUd66fdhvKpC_tcS_CkSjYywixLl3Fa04OU8gCekQ"; // all states (layoffdata.com)
 require("auth.php");
 $range = "a1:m100000";
-$url = "https://sheets.googleapis.com/v4/spreadsheets/" . $sheetId .  "/values/" . $range . "?access_token=" . $accessToken . "&key=" . $ApiKey; 
+
+//$url = "https://sheets.googleapis.com/v4/spreadsheets/" . $sheetId .  "/values/" . $range . "?access_token=" . $accessToken . "&key=" . $ApiKey;  // API error
+$url = "https://sheets.googleapis.com/v4/spreadsheets/" . $sheetId .  "/values/" . $range . "?access_token=" . $accessToken; 
 
 /*$headers = array(
 	"--header 'Authorization: Bearer " . $accessToken . "'",
@@ -33,12 +35,17 @@ $headers = array(
 
 echo "Layoff WARN web app testing header<br><br>";
 
+echo "url: $url ---------<br><br>";
+
+
 $curl = curl_init();
 
 curl_setopt($curl, CURLOPT_URL, "$url");
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+
+
 
 $response = curl_exec($curl);
 
@@ -48,7 +55,7 @@ if($response == false){
 	//$curlInfo = curl_getinfo($curl);
 	echo $response;
 }
-	file_put_contents("data/allStates.json", $response);
+	file_put_contents("data/allStates-testing.json", $response);
 	curl_close($curl);
 
 // Save to a file for many lookups
