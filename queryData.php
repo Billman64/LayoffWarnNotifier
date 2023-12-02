@@ -132,9 +132,9 @@ if($data!="" & ($state!="" || isset($_GET['company']) || isset($_GET['date']))){
 
 		
 			
-		
-		
-		echo "<tr><td>" . $recNum .".</td><td maxwidth=400>". $d[1] ."</td><td maxwidth=200>". $d[2] ."</td><td>". getState($d[0]) ."</td><td>".  $d[4] ."</td><td>". $effDate . "</td><td>". $noticeType ."</td><td>". $d[3] ."</td><td>". $details ."</td></tr>";	// Data output
+		$stateData = "";
+		if($state == "") $stateData = '<td>'. getState($d[0]) .'</td>';
+		echo "<tr><td>" . $recNum .".</td><td maxwidth=400>". $d[1] ."</td><td maxwidth=200>". $d[2] ."</td>". $stateData ."<td>".  $d[4] ."</td><td>". $effDate . "</td><td>". $noticeType ."</td><td>". $d[3] ."</td><td>". $details ."</td></tr>";	// Data output
 		//echo "<tr><td style='padding-left: 10px;' colspan=7><details>time period: ". $timePeriod ." union: ". $union ."</details></td></tr>";
 		}
 		
@@ -245,7 +245,7 @@ function selectStateForm($states, $currentState = ""){
 	echo '<input name="company" type="text"> ';
 	
 	//TODO: date selection (? calendar picker, month and year dropdown boxes)
-	echo '<label for="date">effective month:</label>';
+	echo '<label for="date" style="margin-left:10px; margin-right:10px;">month notice received: <i class="fa fa-info-circle" title="tip: go back 2 months prior, since notices are posted with a 60-day window."></i></label>';
 	echo '<input id="date" name="date" type="date">';
 
 
