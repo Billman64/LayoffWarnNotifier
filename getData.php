@@ -54,15 +54,16 @@ if($response == false){
 } else {
 	//$curlInfo = curl_getinfo($curl);
 	echo $response;
-}
-	file_put_contents("data/allStates-testing.json", $response);
-	curl_close($curl);
+}	
 
-// Save to a file for many lookups
+curl_close($curl);
 
 
-// Get data (array of some layoffNotice object?)
-// json_decode(response)
+//file_put_contents("data/allStates.json", $response);	// orig.
 
+// Segment the newly-created file into 2 smaller files, to work-around limitations for some web hosts.
+$threshold = 9000000;	// recommended to go under 10MB's
+file_put_contents("data/allStates1.json", substr($response,0,$threshold);
+if(strlen($response)>$threshold) file_put_contents("data/allStates2.json", substr($response, $threshold+1,strlen($response));
 
 ?>
