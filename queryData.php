@@ -8,7 +8,8 @@ echo '';
 //TODO: Bootstrap for responsiveness
 
 
-$filename = "allStates.json";
+$filename = "allStates1.json";
+$filename2 = "allStates2.json";
 $location = "data/";
 // 50-state array imported and modified from: https://dzone.com/articles/usa-states-list-php-array
 $allStates = array('AL'=>"Alabama", 'AK'=>"Alaska", 'AZ'=>"Arizona", 'AR'=>"Arkansas", 'CA'=>"California", 'CO'=>"Colorado", 'CT'=>"Connecticut", 'DE'=>"Delaware", 'DC'=>"District Of Columbia", 'FL'=>"Florida", 'GA'=>"Georgia", 'HI'=>"Hawaii", 'ID'=>"Idaho", 'IL'=>"Illinois", 'IN'=>"Indiana", 'IA'=>"Iowa", 'KS'=>"Kansas", 'KY'=>"Kentucky", 'LA'=>"Louisiana", 'ME'=>"Maine", 'MD'=>"Maryland", 'MA'=>"Massachusetts", 'MI'=>"Michigan", 'MN'=>"Minnesota", 'MS'=>"Mississippi", 'MO'=>"Missouri", 'MT'=>"Montana", 'NE'=>"Nebraska", 'NV'=>"Nevada", 'NH'=>"New Hampshire", 'NJ'=>"New Jersey", 'NM'=>"New Mexico", 'NY'=>"New York", 'NC'=>"North Carolina", 'ND'=>"North Dakota", 'OH'=>"Ohio", 'OK'=>"Oklahoma", 'OR'=>"Oregon", 'PA'=>"Pennsylvania", 'RI'=>"Rhode Island", 'SC'=>"South Carolina", 'SD'=>"South Dakota", 'TN'=>"Tennessee", 'TX'=>"Texas", 'UT'=>"Utah", 'VT'=>"Vermont", 'VA'=>"Virginia", 'WA'=>"Washington", 'WV'=>"West Virginia", 'WI'=>"Wisconsin", 'WY'=>"Wyoming");
@@ -76,6 +77,8 @@ if($testArea){
 if(file_exists($location . $filename)) {	//TODO: refactor - integrate into next if() block
 	$data = file_get_contents($location . $filename);
 	
+	if(file_exists($location . $filename2)) $data .= file_get_contents($location . $filename2);
+	
 	if($data == "") {	// Error-trapping for a blank data file.
 		$data = "Date file is empty.";
 		echo $data . "<br>";	
@@ -84,7 +87,7 @@ if(file_exists($location . $filename)) {	//TODO: refactor - integrate into next 
 	}
 } else {
 	$data = "";
-	echo "Data file does not exist.";
+	echo "Data file does not exist.<br>";
 }
 
 
@@ -307,6 +310,7 @@ function shareBar(){
 	//BuyMeACoffee button
 	echo '<div style="float:right;"><span style=""><a href="https://www.buymeacoffee.com/Billman64" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a></span></div>';
 	
+	echo '<p style="font-family:monospace; font-size:small;">status: in beta</p>';
 	
 }
 
