@@ -43,6 +43,7 @@ if($testArea){
 
 	echo '<span style="background:#ddd; font-family:courier;"><div style="background:inherit">Test area</div>';
 
+
 	$date = getdate();
 
 	echo "company: " . $company; //." strlen(): ". strlen($company) ."<br>";
@@ -117,7 +118,7 @@ if($data!="" & ($state!="" || isset($_GET['company']) || isset($_GET['date']))){
 	foreach($dataValues as $d){	//TODO: make filtering flexible for state-less searches
 
 		//if($d[0] == getState($state) && isFutureDate($d[4]) && strstr($d[1], $company) ){	//TODO: new fcn for looser string comparisons (trim, case, punctuation, etc.)
-		if(($d[0] == getState($state) || getState($state) == "") && isFutureDate($d[4]) && strstr(strtolower($d[1]), strtolower($company)) ){	//TODO: new fcn for looser string comparisons (trim, case, punctuation, etc.)
+		if(($d[0] == getState($state) || getState($state) == "") && isFutureDate($d[4]) && (strstr(strtolower($d[1]), strtolower($company)) || strstr(strtolower($d[1]), strtolower(altCompanyName($company)))) ){	//TODO: new fcn for looser string comparisons (trim, case, punctuation, etc.)
 		
 		$recNum++;
 		//TODO: long company names with smaller font-size
@@ -280,9 +281,14 @@ function getCompany() {
 
 function altCompanyName($co){
 	
-	
+	// temporary array until a longer list is implemented in a database.
 	$coList = array("Fedex"=>"Federal Express", "UPS"=> "United Parcel Service");
+	$coList = array_change_key_case($coList, CASE_LOWER);
+	$co = strtolower($co);
 	
+	if(isset($coList[$co])) return $coList[$co];
+		
+	return $co;
 }
 
 //TODO: write automated testing. Selenium?
