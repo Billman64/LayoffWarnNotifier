@@ -117,7 +117,7 @@ if($data!="" & ($state!="" || isset($_GET['company']) || isset($_GET['date']))){
 	foreach($dataValues as $d){	//TODO: make filtering flexible for state-less searches
 
 		//if($d[0] == getState($state) && isFutureDate($d[4]) && strstr($d[1], $company) ){	//TODO: new fcn for looser string comparisons (trim, case, punctuation, etc.)
-		if(($d[0] == getState($state) || getState($state) == "") && isFutureDate($d[4]) && strstr($d[1], $company) ){	//TODO: new fcn for looser string comparisons (trim, case, punctuation, etc.)
+		if(($d[0] == getState($state) || getState($state) == "") && isFutureDate($d[4]) && strstr(strtolower($d[1]), strtolower($company)) ){	//TODO: new fcn for looser string comparisons (trim, case, punctuation, etc.)
 		
 		$recNum++;
 		//TODO: long company names with smaller font-size
@@ -275,6 +275,14 @@ function getCompany() {
 	}
 	return $company;
 
+}
+
+
+function altCompanyName($co){
+	
+	
+	$coList = array("Fedex"=>"Federal Express", "UPS"=> "United Parcel Service");
+	
 }
 
 //TODO: write automated testing. Selenium?
